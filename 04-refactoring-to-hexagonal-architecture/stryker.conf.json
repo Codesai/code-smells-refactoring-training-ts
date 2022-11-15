@@ -1,0 +1,4 @@
+{
+  "checkers": ["typescript"],
+  "tsconfigFile": "tsconfig.json"
+}
