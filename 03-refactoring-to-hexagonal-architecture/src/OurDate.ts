@@ -3,12 +3,8 @@ export class OurDate {
     private date: Date;
 
     constructor(yyyyMMdd: string) {
-        try {
-            const [year, month, day] = yyyyMMdd.split("/");
-            this.date = new Date(Number(year), Number(month) -1, Number(day));
-        } catch (e) {
-            throw new Error("ParseException");
-        }
+        const [year, month, day] = yyyyMMdd.split("/");
+        this.date = new Date(Number(year), Number(month) - 1, Number(day));
     }
 
     public getDay(): number {

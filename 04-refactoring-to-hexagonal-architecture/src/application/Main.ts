@@ -12,7 +12,7 @@ export class Main {
     public static main(args: string) {
         const service = new BirthdayService(new FileEmployeesRepository(this.EMPLOYEES_FILE_PATH));
         try {
-            const today = new OurDate(new Date())
+            const today = new OurDate(new Date());
             service.sendGreetings(today, this.HOST, this.SMTP_PORT, this.SENDER_EMAIL_ADDRESS);
         } catch (e) {
             console.log(e);

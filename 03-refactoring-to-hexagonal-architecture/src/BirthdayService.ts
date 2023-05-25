@@ -1,9 +1,9 @@
 import {OurDate} from "./OurDate";
 import {Employee} from "./Employee";
 import * as fs from "fs";
-import {Transporter} from "nodemailer";
-import nodemailer from "nodemailer";
+import nodemailer, {Transporter} from "nodemailer";
 import {MailOptions} from "nodemailer/lib/smtp-transport";
+import {EmailNotSentError} from "./EmailNotSentError";
 
 export class BirthdayService {
 
@@ -22,8 +22,6 @@ export class BirthdayService {
                     body, recipient);
             }
         });
-
-
     }
 
     private sendTheMessage(smtpHost: string, smtpPort: number, sender: string,
@@ -48,8 +46,8 @@ export class BirthdayService {
 
     // made protected for testing :-(
     protected sendMessage(msg: MailOptions, transport: Transporter) {
-        transport.sendMail(msg, (err) => {
-            if (err) throw new Error("not send");
+        transport.sendMail(msg, (err: Error | null) => {
+            if (err) throw new EmailNotSentError(err);
         });
     }
 
