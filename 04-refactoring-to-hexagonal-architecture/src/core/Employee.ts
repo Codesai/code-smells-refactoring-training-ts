@@ -26,10 +26,4 @@ export class Employee {
     public getFirstName(): string {
         return this.firstName;
     }
-
-    public toString() {
-        return "Employee " + this.firstName + " " + this.lastName + " <" + this.email
-            + "> born " + this.birthDate;
-    }
-
 }

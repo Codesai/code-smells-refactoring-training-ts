@@ -5,12 +5,7 @@ import {CannotReadEmployeesException} from "../../../src/core/CannotReadEmployee
 
 describe('File Employee Repository', () => {
 
-    let ANY_DATE: OurDate;
-
-    beforeEach(() => {
-        ANY_DATE = ourDateFromString("2016/01/01");
-    });
-
+    let ANY_DATE: OurDate = ourDateFromString("2016/01/01");;
 
     it('fails when the file does not exist', () => {
         const employeesRepository = new FileEmployeesRepository("non-existing.file");

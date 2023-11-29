@@ -6,11 +6,11 @@ export class OurDate {
         this.date = date;
     }
 
-    public getDay(): number {
+    private getDay(): number {
         return this.date.getDate();
     }
 
-    public getMonth(): number {
+    private getMonth(): number {
         return 1 + this.date.getMonth();
     }
 
