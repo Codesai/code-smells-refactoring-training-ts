@@ -6,6 +6,8 @@ import {MailOptions} from "nodemailer/lib/smtp-transport";
 describe('Acceptance', () => {
 
     const SMTP_PORT: number = 25;
+    const SMTP_HOST: string = "localhost";
+    const FROM: string = "sender@here.com";
     let messagesSent: Array<MailOptions>;
     let service: BirthdayService;
 
@@ -19,8 +21,7 @@ describe('Acceptance', () => {
     })
 
     it('base scenario', () => {
-        service.sendGreetings("test/resources/employee_data.txt",
-            new OurDate("2008/10/08"), "localhost", SMTP_PORT);
+        service.sendGreetings("test/resources/employee_data.txt", new OurDate("2008/10/08"), SMTP_HOST, SMTP_PORT, FROM);
 
         expect(messagesSent.length).toEqual(1);
         const message = messagesSent[0];
@@ -30,8 +31,7 @@ describe('Acceptance', () => {
     });
 
     it('will not send emails when nobodys birthday', () => {
-        service.sendGreetings("test/resources/employee_data.txt",
-            new OurDate("2008/01/01"), "localhost", SMTP_PORT);
+        service.sendGreetings("test/resources/employee_data.txt", new OurDate("2008/01/01"), SMTP_HOST, SMTP_PORT, FROM);
 
         expect(messagesSent.length).toEqual(0);
     });

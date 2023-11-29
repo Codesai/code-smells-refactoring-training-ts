@@ -7,7 +7,7 @@ import {EmailNotSentError} from "./EmailNotSentError";
 
 export class BirthdayService {
 
-    public sendGreetings(fileName: string, ourDate: OurDate, smtpHost: string, smtpPort: number) {
+    public sendGreetings(fileName: string, ourDate: OurDate, smtpHost: string, smtpPort: number, sender: string) {
         const data = fs.readFileSync(fileName, {encoding: 'utf8'});
         data.split(/\r?\n/).forEach((str: string) => {
             let employeeData = str.split(", ");
@@ -18,7 +18,7 @@ export class BirthdayService {
                 const body = "Happy Birthday, dear %NAME%!".replace("%NAME%",
                     employee.getFirstName());
                 const subject = "Happy Birthday!";
-                this.sendTheMessage(smtpHost, smtpPort, "sender@here.com", subject,
+                this.sendTheMessage(smtpHost, smtpPort, sender, subject,
                     body, recipient);
             }
         });
@@ -49,15 +49,5 @@ export class BirthdayService {
         transport.sendMail(msg, (err: Error | null) => {
             if (err) throw new EmailNotSentError(err);
         });
-    }
-
-    public main(args: string) {
-        const service = new BirthdayService();
-        try {
-            service.sendGreetings("employee_data.txt",
-                new OurDate("2008/10/08"), "localhost", 25);
-        } catch (e) {
-            console.log(e);
-        }
     }
 }

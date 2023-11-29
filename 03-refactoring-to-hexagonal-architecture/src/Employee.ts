@@ -27,9 +27,4 @@ export class Employee {
         return this.firstName;
     }
 
-    public toString() {
-        return "Employee " + this.firstName + " " + this.lastName + " <" + this.email
-            + "> born " + this.birthDate;
-    }
-
 }
