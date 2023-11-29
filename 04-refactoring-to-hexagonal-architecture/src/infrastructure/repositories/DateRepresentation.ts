@@ -8,12 +8,8 @@ export class DateRepresentation {
     }
 
     public toDate(): OurDate {
-        try {
-            const [year, month, day] = this.dateAsString.split("/");
-            const date = new Date(Number(year), Number(month) - 1, Number(day));
-            return new OurDate(date);
-        } catch (e) {
-            throw new Error("ParseException");
-        }
+        const [year, month, day] = this.dateAsString.split("/");
+        const date = new Date(Number(year), Number(month) - 1, Number(day));
+        return new OurDate(date);
     }
 }

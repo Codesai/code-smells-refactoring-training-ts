@@ -5,6 +5,7 @@ import nodemailer from "nodemailer";
 import {MailOptions} from "nodemailer/lib/smtp-transport";
 import {EmployeesRepository} from "../core/EmployeesRepository";
 import {GreetingMessage} from "../core/GreetingMessage";
+import {EmailNotSentError} from "../infrastructure/EmailNotSentError";
 
 export class BirthdayService {
     private employeesRepository: EmployeesRepository;
@@ -57,8 +58,8 @@ export class BirthdayService {
 
     // made protected for testing :-(
     protected sendMessage(msg: MailOptions, transport: Transporter) {
-        transport.sendMail(msg, (err) => {
-            if (err) throw new Error("not send");
+        transport.sendMail(msg, (err: Error | null) => {
+            if (err) throw new EmailNotSentError(err);
         });
     }
 
