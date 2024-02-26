@@ -1,19 +1,19 @@
 import {Movie} from "./Movie";
 
 export class Rental {
+
+    private readonly _movie: Movie;
+    private readonly _daysRented: number;
     constructor(movie: Movie, daysRented: number) {
-        this.movie = movie;
-        this.daysRented = daysRented;
+        this._movie = movie;
+        this._daysRented = daysRented;
     }
 
-    public getDaysRented(): number {
-        return this.daysRented;
+    getDaysRented(): number {
+        return this._daysRented;
     }
 
-    public getMovie(): Movie {
-        return this.movie;
+    getMovie(): Movie {
+        return this._movie;
     }
-
-    private movie: Movie;
-    private daysRented: number;
 }

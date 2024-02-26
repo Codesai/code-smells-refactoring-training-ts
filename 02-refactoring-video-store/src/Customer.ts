@@ -2,22 +2,26 @@ import {Rental} from "./Rental";
 import {Movie} from "./Movie";
 
 export class Customer {
+
+    private readonly _name: string;
+    private readonly _rentals: Rental[];
     constructor(name: string) {
-        this.name = name;
+        this._name = name;
+        this._rentals = [];
     }
 
-    public addRental(rental: Rental) {
-        this.rentals.push(rental);
+    addRental(rental: Rental): void {
+        this._rentals.push(rental);
     }
 
-    public getName(): string {
-        return this.name;
+    getName(): string {
+        return this._name;
     }
 
-    public statement(): string {
+    statement(): string {
         let totalAmount = 0;
         let frequentRenterPoints = 0;
-        const rentals = this.rentals.entries();
+        const rentals = this._rentals.entries();
         let result = "Rental Record for " + this.getName() + "\n";
 
         for(const [index, each] of rentals) {
@@ -33,7 +37,7 @@ export class Customer {
                 case Movie.NEW_RELEASE:
                     thisAmount += each.getDaysRented() * 3;
                     break;
-                case Movie.CHILDRENS:
+                case Movie.CHILDREN:
                     thisAmount += 1.5;
                     if (each.getDaysRented() > 3)
                         thisAmount += (each.getDaysRented() - 3) * 1.5;
@@ -57,8 +61,4 @@ export class Customer {
 
         return result;
     }
-
-
-    private name: string;
-    private rentals = Array<Rental>();
 }

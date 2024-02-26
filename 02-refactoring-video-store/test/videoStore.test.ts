@@ -26,14 +26,14 @@ describe("Video Store", () => {
     });
 
     it("single childrens statement", () => {
-        customer.addRental(new Rental(new Movie("The Tigger Movie", Movie.CHILDRENS), 3));
+        customer.addRental(new Rental(new Movie("The Tigger Movie", Movie.CHILDREN), 3));
 
         expect(customer.statement())
             .toEqual("Rental Record for Fred\n\tThe Tigger Movie\t1.5\nYou owed 1.5\nYou earned 1 frequent renter points\n");
     });
 
     it("single childrens statement rented more than three days ago", () => {
-        customer.addRental(new Rental(new Movie("The Tigger Movie", Movie.CHILDRENS), 4));
+        customer.addRental(new Rental(new Movie("The Tigger Movie", Movie.CHILDREN), 4));
 
         expect(customer.statement())
             .toEqual("Rental Record for Fred\n\tThe Tigger Movie\t3.0\nYou owed 3.0\nYou earned 1 frequent renter points\n");
