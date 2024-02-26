@@ -1,20 +1,19 @@
 import {OurDate} from "../core/OurDate";
 import {Employee} from "../core/Employee";
-import {Transporter} from "nodemailer";
-import nodemailer from "nodemailer";
+import nodemailer, {Transporter} from "nodemailer";
 import {MailOptions} from "nodemailer/lib/smtp-transport";
 import {EmployeesRepository} from "../core/EmployeesRepository";
 import {GreetingMessage} from "../core/GreetingMessage";
 import {EmailNotSentError} from "../infrastructure/EmailNotSentError";
 
 export class BirthdayService {
-    private employeesRepository: EmployeesRepository;
+    private readonly _employeesRepository: EmployeesRepository;
 
     constructor(employeeRepository: EmployeesRepository) {
-        this.employeesRepository = employeeRepository;
+        this._employeesRepository = employeeRepository;
     }
 
-    public sendGreetings(date: OurDate, smtpHost: string, smtpPort: number, sender: string) {
+    sendGreetings(date: OurDate, smtpHost: string, smtpPort: number, sender: string): void {
         this.send(this.greetingMessagesFor(this.employeesHavingBirthday(date)),
             smtpHost, smtpPort, sender);
     }
@@ -24,10 +23,12 @@ export class BirthdayService {
     }
 
     private employeesHavingBirthday(today: OurDate): Array<Employee> {
-        return this.employeesRepository.whoseBirthdayIs(today);
+        return this._employeesRepository.allEmployees().filter(
+            (employee: Employee) => employee.isBirthday(today)
+        );
     }
 
-    private send(messages: Array<GreetingMessage>, smtpHost: string, smtpPort: number, sender: string) {
+    private send(messages: Array<GreetingMessage>, smtpHost: string, smtpPort: number, sender: string): void {
         for (const message of messages) {
             const recipient = message.to();
             const body = message.text();
@@ -37,7 +38,7 @@ export class BirthdayService {
     }
 
     private sendTheMessage(smtpHost: string, smtpPort: number, sender: string,
-                           subject: string, body: string, recipient: string) {
+                           subject: string, body: string, recipient: string): void {
         // Create a mail session
         const transport = nodemailer.createTransport({
             host: smtpHost,
@@ -57,10 +58,11 @@ export class BirthdayService {
     }
 
     // made protected for testing :-(
-    protected sendMessage(msg: MailOptions, transport: Transporter) {
+    protected sendMessage(msg: MailOptions, transport: Transporter): void {
         transport.sendMail(msg, (err: Error | null) => {
-            if (err) throw new EmailNotSentError(err);
+            if (err) {
+                throw new EmailNotSentError(err);
+            }
         });
     }
-
 }

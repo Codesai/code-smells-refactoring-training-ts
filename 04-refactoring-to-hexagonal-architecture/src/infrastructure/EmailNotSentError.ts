@@ -1,9 +1,8 @@
-export class EmailNotSentError implements Error {
+export class EmailNotSentError extends Error {
     public message: string;
     public name: string;
 
     constructor(err: Error) {
-        this.message = "email not sent: " + err.message;
-        this.name = "EmailNotSentError";
+        super("email not sent: " + err.message)
     }
 }

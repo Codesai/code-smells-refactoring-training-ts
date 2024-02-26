@@ -1,4 +1,4 @@
-export class CannotReadEmployeesException extends Error {
+export class CannotReadEmployeesError extends Error {
     constructor(cause: string) {
         super(cause);
     }
