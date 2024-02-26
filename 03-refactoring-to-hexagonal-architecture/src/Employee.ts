@@ -2,29 +2,28 @@ import {OurDate} from "./OurDate";
 
 export class Employee {
 
-    private readonly birthDate: OurDate;
-    private readonly lastName: string;
-    private readonly firstName: string;
-    private readonly email: string;
+    private readonly _birthDate: OurDate;
+    private readonly _lastName: string;
+    private readonly _firstName: string;
+    private readonly _email: string;
 
     constructor(firstName: string, lastName: string, birthDate: string,
                 email: string) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthDate = new OurDate(birthDate);
-        this.email = email;
+        this._firstName = firstName;
+        this._lastName = lastName;
+        this._birthDate = new OurDate(birthDate);
+        this._email = email;
     }
 
-    public isBirthday(today: OurDate): boolean {
-        return today.isSameDay(this.birthDate);
+    isBirthday(today: OurDate): boolean {
+        return today.isSameDay(this._birthDate);
     }
 
-    public getEmail(): string {
-        return this.email;
+    getEmail(): string {
+        return this._email;
     }
 
-    public getFirstName(): string {
-        return this.firstName;
+    getFirstName(): string {
+        return this._firstName;
     }
-
 }

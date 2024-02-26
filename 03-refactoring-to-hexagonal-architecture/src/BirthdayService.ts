@@ -7,9 +7,9 @@ import {EmailNotSentError} from "./EmailNotSentError";
 
 export class BirthdayService {
 
-    public sendGreetings(fileName: string, ourDate: OurDate, smtpHost: string, smtpPort: number, sender: string) {
-        const data = fs.readFileSync(fileName, {encoding: 'utf8'});
-        data.split(/\r?\n/).forEach((str: string) => {
+    sendGreetings(fileName: string, ourDate: OurDate, smtpHost: string, smtpPort: number, sender: string): void {
+        const lines = fs.readFileSync(fileName, {encoding: 'utf8'}).split(/\r?\n/).slice(1);
+        lines.forEach((str: string) => {
             let employeeData = str.split(", ");
             const employee = new Employee(employeeData[1], employeeData[0],
                 employeeData[2], employeeData[3]);
@@ -25,7 +25,7 @@ export class BirthdayService {
     }
 
     private sendTheMessage(smtpHost: string, smtpPort: number, sender: string,
-                           subject: string, body: string, recipient: string) {
+                           subject: string, body: string, recipient: string): void {
         // Create a mail session
         const transport = nodemailer.createTransport({
             host: smtpHost,
@@ -45,9 +45,11 @@ export class BirthdayService {
     }
 
     // made protected for testing :-(
-    protected sendMessage(msg: MailOptions, transport: Transporter) {
+    protected sendMessage(msg: MailOptions, transport: Transporter): void {
         transport.sendMail(msg, (err: Error | null) => {
-            if (err) throw new EmailNotSentError(err);
+            if (err) {
+                throw new EmailNotSentError(err);
+            }
         });
     }
 }

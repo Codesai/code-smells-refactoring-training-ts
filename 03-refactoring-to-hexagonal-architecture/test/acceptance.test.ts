@@ -14,7 +14,7 @@ describe('Acceptance', () => {
     beforeEach(() => {
         messagesSent = new Array<MailOptions>();
         service = new class extends BirthdayService {
-            protected sendMessage(msg: MailOptions, transport: Transporter) {
+            protected sendMessage(msg: MailOptions, transport: Transporter): void {
                 messagesSent.push(msg);
             }
         };

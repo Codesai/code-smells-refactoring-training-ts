@@ -9,5 +9,4 @@ describe('Employee', () => {
     expect(employee.isBirthday(new OurDate("2008/01/30"))).toBeFalsy();
     expect(employee.isBirthday(new OurDate("2008/01/31"))).toBeTruthy();
   });
-
 });
