@@ -14,7 +14,7 @@ describe('File Employee Repository', () => {
         expect(gettingAllEmployees).toThrow(new RegExp(`^Cannot load from file: '${path}'$`));
     });
 
-    it('fails when the file does not have the necessary fields', () => {
+    it('fails when the birth date is not well formatted', () => {
         whenReadingFrom("test/resources/wrong_data_format.csv");
 
         expect(gettingAllEmployees).toThrow(CannotReadEmployeesError);
