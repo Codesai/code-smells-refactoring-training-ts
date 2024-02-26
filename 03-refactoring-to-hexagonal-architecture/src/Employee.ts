@@ -8,10 +8,10 @@ export class Employee {
     private readonly email: string;
 
     constructor(firstName: string, lastName: string, birthDate: string,
-                email: string) {
+                email: string, birthDate1: OurDate) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.birthDate = new OurDate(birthDate);
+        this.birthDate = birthDate1;
         this.email = email;
     }
 

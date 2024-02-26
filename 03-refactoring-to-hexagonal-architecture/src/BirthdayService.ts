@@ -1,27 +1,36 @@
 import {OurDate} from "./OurDate";
 import {Employee} from "./Employee";
-import * as fs from "fs";
 import nodemailer, {Transporter} from "nodemailer";
 import {MailOptions} from "nodemailer/lib/smtp-transport";
 import {EmailNotSentError} from "./EmailNotSentError";
 
+import {Employees} from "./Employees";
+
 export class BirthdayService {
 
-    public sendGreetings(fileName: string, ourDate: OurDate, smtpHost: string, smtpPort: number, sender: string) {
-        const data = fs.readFileSync(fileName, {encoding: 'utf8'});
-        data.split(/\r?\n/).forEach((str: string) => {
-            let employeeData = str.split(", ");
-            const employee = new Employee(employeeData[1], employeeData[0],
-                employeeData[2], employeeData[3]);
+    private employees: Employees;
+
+    constructor(employees: Employees) {
+        this.employees = employees;
+    }
+
+    public sendGreetings(ourDate: OurDate, smtpHost: string, smtpPort: number, sender: string) {
+
+        const employees = this.employees.retrieveEmployees();
+        for (const employee of employees) {
             if (employee.isBirthday(ourDate)) {
-                const recipient = employee.getEmail();
-                const body = "Happy Birthday, dear %NAME%!".replace("%NAME%",
-                    employee.getFirstName());
-                const subject = "Happy Birthday!";
-                this.sendTheMessage(smtpHost, smtpPort, sender, subject,
-                    body, recipient);
+                this.sendGreeting(employee, smtpHost, smtpPort, sender);
             }
-        });
+        }
+    }
+
+    private sendGreeting(employee: Employee, smtpHost: string, smtpPort: number, sender: string) {
+        const recipient = employee.getEmail();
+        const body = "Happy Birthday, dear %NAME%!".replace("%NAME%",
+            employee.getFirstName());
+        const subject = "Happy Birthday!";
+        this.sendTheMessage(smtpHost, smtpPort, sender, subject,
+            body, recipient);
     }
 
     private sendTheMessage(smtpHost: string, smtpPort: number, sender: string,

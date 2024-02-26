@@ -1,12 +1,16 @@
 import {BirthdayService} from "./BirthdayService";
 import {OurDate} from "./OurDate";
 
+import {FileEmployees} from "./FileEmployees";
+import {DateRepresentation} from "./DateRepresentation";
+
 export class SomeServiceClient {
 
     runService(): void {
-        const service = new BirthdayService();
+        const fileName = "employee_data.txt";
+        const service = new BirthdayService(new FileEmployees(fileName));
         try {
-            service.sendGreetings("employee_data.txt", new OurDate("2008/10/08"), "localhost", 25, "sender@here.com");
+            service.sendGreetings(DateRepresentation.toSlashDate("2008/10/08"), "localhost", 25, "sender@here.com");
         } catch (e) {
             console.log(e);
         }
