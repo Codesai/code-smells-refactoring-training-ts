@@ -6,7 +6,6 @@ import {date} from "../helper/OurDateFactory";
 import {EmailGreetingsSender} from "../../src/infrastructure/EmailGreetingsSender";
 
 describe('Acceptance', () => {
-
     const EMPLOYEES_FILE_PATH = "test/resources/employee_data.txt";
     const FROM: string = "sender@here.com";
     const SMTP_HOST: string = "localhost";

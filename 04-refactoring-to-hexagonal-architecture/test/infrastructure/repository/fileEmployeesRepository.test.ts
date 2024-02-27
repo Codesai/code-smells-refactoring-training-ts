@@ -2,9 +2,19 @@ import {FileEmployeesRepository} from "../../../src/infrastructure/repositories/
 import {CannotReadEmployeesError} from "../../../src/core/CannotReadEmployeesError";
 import {EmployeesRepository} from "../../../src/core/EmployeesRepository";
 import {Employee} from "../../../src/core/Employee";
+import {date} from "../../helper/OurDateFactory";
 
 describe('File Employee Repository', () => {
     let employeesRepository: EmployeesRepository;
+
+    it('reads the employees from files', () => {
+        whenReadingFrom("test/resources/employee_data.txt");
+
+        const employees = gettingAllEmployees()
+
+        expect(employees.length).toBe(2)
+        expect(employees[0]).toEqual(new Employee("John", date("1982/10/08"), "john.doe@foobar.com"))
+    })
 
     it('fails when the file does not exist', () => {
         const path = "non-existing.file";

@@ -3,6 +3,7 @@ import nodemailer, {Transporter} from "nodemailer";
 import {EmailNotSentError} from "./EmailNotSentError";
 import {GreetingMessage} from "../core/GreetingMessage";
 import {GreetingsSender} from "./GreetingsSender";
+import {MessageNotSentError} from "../core/MessageNotSentError";
 
 export class EmailGreetingsSender implements GreetingsSender {
     private readonly _smtpHost: string;
@@ -27,7 +28,11 @@ export class EmailGreetingsSender implements GreetingsSender {
 
         const msg = this.constructTheMessage(message);
 
-        this.sendMessage(msg, transport);
+        try {
+            this.sendMessage(msg, transport);
+        } catch (error) {
+            throw new MessageNotSentError(error)
+        }
     }
 
     private constructTheMessage(message: GreetingMessage) {

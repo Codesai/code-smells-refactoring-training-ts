@@ -3,3 +3,4 @@ export class EmailNotSentError extends Error {
         super("email not sent: " + err.message)
     }
 }
+
