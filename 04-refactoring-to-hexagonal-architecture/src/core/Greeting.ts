@@ -15,11 +15,11 @@ export class Greeting {
         return new Greeting(header, content);
     }
 
-    public header(): string {
+    header(): string {
         return this._header;
     }
 
-    public content(): string {
+    content(): string {
         return this._content;
     }
 }

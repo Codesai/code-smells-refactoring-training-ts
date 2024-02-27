@@ -2,7 +2,8 @@ import {BirthdayService} from "../../src/application/BirthdayService";
 import {Transporter} from "nodemailer";
 import {MailOptions} from "nodemailer/lib/smtp-transport";
 import {FileEmployeesRepository} from "../../src/infrastructure/repositories/FileEmployeesRepository";
-import {ourDateFromString} from "../helper/OurDateFactory";
+import {date} from "../helper/OurDateFactory";
+import {EmailGreetingsSender} from "../../src/infrastructure/EmailGreetingsSender";
 
 describe('Acceptance', () => {
 
@@ -15,15 +16,20 @@ describe('Acceptance', () => {
 
     beforeEach(() => {
         messagesSent = new Array<MailOptions>();
-        service = new class extends BirthdayService{
+        const emailGreetingsSender = new class extends EmailGreetingsSender {
             protected sendMessage(msg: MailOptions, transport: Transporter) {
                 messagesSent.push(msg);
             }
-        }(new FileEmployeesRepository(EMPLOYEES_FILE_PATH));
+        }(SMTP_HOST, SMTP_PORT, FROM)
+
+        service = new BirthdayService(
+            new FileEmployeesRepository(EMPLOYEES_FILE_PATH),
+            emailGreetingsSender
+        );
     })
 
     it('base scenario', () => {
-        service.sendGreetings(ourDateFromString("2008/10/08"), SMTP_HOST, SMTP_PORT, FROM);
+        service.sendGreetings(date("2008/10/08"));
 
         expect(messagesSent.length).toEqual(1);
         const message = messagesSent[0];
@@ -33,7 +39,7 @@ describe('Acceptance', () => {
     });
 
     it('will not send emails when nobodys birthday', () => {
-        service.sendGreetings(ourDateFromString("2008/01/01"), SMTP_HOST, SMTP_PORT, FROM);
+        service.sendGreetings(date("2008/01/01"));
 
         expect(messagesSent.length).toEqual(0);
     });

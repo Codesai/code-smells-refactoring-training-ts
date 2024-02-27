@@ -1,32 +1,31 @@
 import {FileEmployeesRepository} from "../../../src/infrastructure/repositories/FileEmployeesRepository";
-import {OurDate} from "../../../src/core/OurDate";
-import {ourDateFromString} from "../../helper/OurDateFactory";
-import {CannotReadEmployeesException} from "../../../src/core/CannotReadEmployeesException";
+import {CannotReadEmployeesError} from "../../../src/core/CannotReadEmployeesError";
+import {EmployeesRepository} from "../../../src/core/EmployeesRepository";
+import {Employee} from "../../../src/core/Employee";
 
 describe('File Employee Repository', () => {
-
-    let ANY_DATE: OurDate = ourDateFromString("2016/01/01");;
+    let employeesRepository: EmployeesRepository;
 
     it('fails when the file does not exist', () => {
-        const employeesRepository = new FileEmployeesRepository("non-existing.file");
+        const path = "non-existing.file";
+        whenReadingFrom(path);
 
-        try {
-            employeesRepository.whoseBirthdayIs(ANY_DATE);
-        } catch (exception) {
-            expect(exception).toBeInstanceOf(CannotReadEmployeesException);
-            expect(exception.message).toContain("cannot loadFrom file");
-            expect(exception.message).toContain("non-existing.file");
-        }
+        expect(gettingAllEmployees).toThrow(CannotReadEmployeesError);
+        expect(gettingAllEmployees).toThrow(new RegExp(`^Cannot load from file: '${path}'$`));
     });
 
-    it('fails when the file does not have the necessary fields', () => {
-        const employeesRepository = new FileEmployeesRepository("test/resources/wrong_data__wrong-date-format.csv");
+    it('fails when the birth date is not well formatted', () => {
+        whenReadingFrom("test/resources/wrong_data_format.csv");
 
-        try {
-            employeesRepository.whoseBirthdayIs(ANY_DATE);
-        } catch (exception) {
-            expect(exception.message).toContain("Badly formatted employee birth date in");
-        }
+        expect(gettingAllEmployees).toThrow(CannotReadEmployeesError);
+        expect(gettingAllEmployees).toThrow(/^Badly formatted employee birth date: '2016-01-01'$/);
     });
 
+    function gettingAllEmployees(): Employee[] {
+        return employeesRepository.allEmployees();
+    }
+
+    function whenReadingFrom(path: string): void {
+        employeesRepository = new FileEmployeesRepository(path);
+    }
 });

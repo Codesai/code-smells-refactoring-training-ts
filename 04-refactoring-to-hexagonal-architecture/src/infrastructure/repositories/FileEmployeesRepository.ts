@@ -3,46 +3,58 @@ import {Employee} from "../../core/Employee";
 import {OurDate} from "../../core/OurDate";
 import fs from "fs";
 import {DateRepresentation} from "./DateRepresentation";
-import {CannotReadEmployeesException} from "../../core/CannotReadEmployeesException";
+import {CannotReadEmployeesError} from "../../core/CannotReadEmployeesError";
 
 export class FileEmployeesRepository implements EmployeesRepository {
-    private readonly path: string;
+    private readonly _path: string;
 
     constructor(path: string) {
-        this.path = path;
+        this._path = path;
     }
 
-    public whoseBirthdayIs(today: OurDate): Array<Employee> {
-        return this.allEmployees()
-            .filter((employee) => employee.isBirthday(today));
-    }
-
-    private allEmployees(): Array<Employee> {
-        const employees = new Array<Employee>();
-        let data = this.readFileData();
-        data.split(/\r?\n/).forEach((str: string) => {
-            let employeeData = str.split(", ");
-            const employee = new Employee(employeeData[1], employeeData[0],
-                this.extractDate(employeeData[2]), employeeData[3]);
-            employees.push(employee);
-        });
+    allEmployees(): Array<Employee> {
+        const employees: Array<Employee> = [];
+        this.readFileLines().forEach(
+            (line: string) => {
+                const employeeData = line.split(", ");
+                employees.push(this.createEmployeeFrom(employeeData));
+            }
+        );
         return employees;
-
     }
 
-    private readFileData() {
-        try {
-            return fs.readFileSync(this.path, {encoding: 'utf8'});
-        } catch (e) {
-            throw new CannotReadEmployeesException(`cannot loadFrom file = '${this.path}'`);
+    private createEmployeeFrom(employeeData: string[]): Employee {
+        return new Employee(getFirstName(), extractDate(), getEmail());
+
+        function getFirstName(): string {
+            return employeeData[1];
+        }
+        function extractDate(): OurDate {
+            const dateAsString = employeeData[2];
+            try {
+                return new DateRepresentation(dateAsString).toDate();
+            } catch (e) {
+                throw new CannotReadEmployeesError(`Badly formatted employee birth date: '${dateAsString}'`);
+            }
+        }
+
+        function getEmail(): string {
+            return employeeData[3];
         }
     }
 
-    private extractDate(dateAsString: string): OurDate {
+    private readFileLines(): string[] {
         try {
-            return new DateRepresentation(dateAsString).toDate();
+            let lines = fs.readFileSync(this._path, {encoding: 'utf8'}).split(/\r?\n/);
+            return removeHeader(lines);
         } catch (e) {
-            throw new CannotReadEmployeesException(`Badly formatted employee birth date in: '${dateAsString}'`);
+            throw new CannotReadEmployeesError(
+                `Cannot load from file: '${this._path}'`
+            );
+        }
+
+        function removeHeader(lines: string[]): string[] {
+            return lines.slice(1);
         }
     }
 }
