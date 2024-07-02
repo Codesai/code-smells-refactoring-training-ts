@@ -10,7 +10,7 @@ export class Rover {
         this.direction = direction;
     }
 
-    public receive(commandsSequence: string) {
+    public receive(commandsSequence: string): void {
         for (let i = 0; i < commandsSequence.length; ++i) {
             const command = commandsSequence.substring(i, i + 1);
 
@@ -64,5 +64,4 @@ export class Rover {
             }
         }
     }
-
 }
