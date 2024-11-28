@@ -7,8 +7,7 @@ describe('File Employee Repository', () => {
     let employeesRepository: EmployeesRepository;
 
     it('fails when the file does not exist', () => {
-        const path = "non-existing.file";
-        whenReadingFrom(path);
+        whenReadingFrom("non-existing.file");
 
         expect(gettingAllEmployees).toThrow(CannotReadEmployeesError);
     });
