@@ -3,6 +3,7 @@ import {Transporter} from "nodemailer";
 import {MailOptions} from "nodemailer/lib/smtp-transport";
 import {FileEmployeesRepository} from "../../src/infrastructure/repositories/FileEmployeesRepository";
 import {date} from "../helper/OurDateFactory";
+import {EmployeesRepository} from "../../src/core/EmployeesRepository";
 
 describe('Acceptance', () => {
 
@@ -15,11 +16,7 @@ describe('Acceptance', () => {
 
     beforeEach(() => {
         messagesSent = new Array<MailOptions>();
-        service = new class extends BirthdayService{
-            protected sendMessage(msg: MailOptions, transport: Transporter) {
-                messagesSent.push(msg);
-            }
-        }(new FileEmployeesRepository(EMPLOYEES_FILE_PATH));
+        service = new BirthdayServiceForTesting(new FileEmployeesRepository(EMPLOYEES_FILE_PATH));
     })
 
     it('base scenario', () => {
@@ -37,4 +34,14 @@ describe('Acceptance', () => {
 
         expect(messagesSent.length).toEqual(0);
     });
+
+    class BirthdayServiceForTesting extends BirthdayService {
+        constructor(employeeRepository: EmployeesRepository) {
+            super(employeeRepository);
+        }
+
+        protected sendMessage(msg: MailOptions, transport: Transporter): void {
+            messagesSent.push(msg);
+        }
+    }
 });
