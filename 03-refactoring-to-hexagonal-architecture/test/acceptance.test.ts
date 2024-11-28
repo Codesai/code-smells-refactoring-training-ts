@@ -13,11 +13,7 @@ describe('Acceptance', () => {
 
     beforeEach(() => {
         messagesSent = new Array<MailOptions>();
-        service = new class extends BirthdayService {
-            protected sendMessage(msg: MailOptions, transport: Transporter): void {
-                messagesSent.push(msg);
-            }
-        };
+        service = new BirthdayServiceForTesting();
     })
 
     it('base scenario', () => {
@@ -35,4 +31,11 @@ describe('Acceptance', () => {
 
         expect(messagesSent.length).toEqual(0);
     });
+
+    class BirthdayServiceForTesting extends BirthdayService {
+
+        protected sendMessage(msg: MailOptions, transport: Transporter): void {
+            messagesSent.push(msg);
+        }
+    }
 });
