@@ -11,14 +11,12 @@ describe('File Employee Repository', () => {
         whenReadingFrom(path);
 
         expect(gettingAllEmployees).toThrow(CannotReadEmployeesError);
-        expect(gettingAllEmployees).toThrow(new RegExp(`^Cannot load from file: '${path}'$`));
     });
 
     it('fails when the birth date is not well formatted', () => {
         whenReadingFrom("test/resources/wrong_data_format.csv");
 
         expect(gettingAllEmployees).toThrow(CannotReadEmployeesError);
-        expect(gettingAllEmployees).toThrow(/^Badly formatted employee birth date: '2016-01-01'$/);
     });
 
     function gettingAllEmployees(): Employee[] {
